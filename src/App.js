@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Switch, Route} from "react-router-dom";
+import {Switch, Route, BrowserRouter} from "react-router-dom";
 import { ThemeProvider, IconButton } from '@material-ui/core';
 import { createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline"
@@ -23,15 +23,17 @@ function App() {
             <div className="App">
                 <header className="App-header">
                     <Heading />
-                    <Switch>
-                        <PrivateRoute path = "/todos">
-                            <TodoInterface />
-                            <SignOut />
-                        </PrivateRoute>
-                        <Route path = "/">
-                            <SignIn/>
-                        </Route>
-                    </Switch>
+                    <BrowserRouter>
+                        <Switch>
+                            <PrivateRoute path="/todos">
+                                <TodoInterface />
+                                <SignOut />
+                            </PrivateRoute>
+                            <Route path="/">
+                                <SignIn/>
+                            </Route>
+                        </Switch>
+                    </BrowserRouter>
                     {/*Dark Mode toggle*/}
                     <br/>
                     <IconButton
