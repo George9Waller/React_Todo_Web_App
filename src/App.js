@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import {Switch, Route} from "react-router-dom";
 import { ThemeProvider, IconButton } from '@material-ui/core';
 import { createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline"
 import { Brightness3, Brightness5 } from '@material-ui/icons';
-import Heading from './components/heading.js'
-import TodoInterface from './components/todos.js'
+import Heading from './components/heading';
+import TodoInterface from './components/todos';
+import PrivateRoute from './components/privateRoute';
+import SignIn from './components/signIn';
 import './App.css';
 
 function App() {
@@ -19,7 +22,14 @@ function App() {
             <div className="App">
                 <header className="App-header">
                     <Heading />
-                    <TodoInterface />
+                    <Switch>
+                        <PrivateRoute path = "/todos">
+                            <TodoInterface />
+                        </PrivateRoute>
+                        <Route path = "/">
+                            <SignIn/>
+                        </Route>
+                    </Switch>
                     {/*Dark Mode toggle*/}
                     <br/>
                     <IconButton

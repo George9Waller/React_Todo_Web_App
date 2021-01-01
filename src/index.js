@@ -1,11 +1,45 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {BrowserRouter} from "react-router-dom";
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+import {createStore, applyMiddleware, compose} from "redux";
+import thunk from "redux-thunk";
+import {Provider} from "react-redux";
+import {ReactReduxFirebaseProvider} from "react-redux-firebase";
+import {createFirestoreInstance} from "redux-firestore";
+import {rootReducer} from "./redux/reducers";
 import './index.css';
 import App from './App';
 
+// react-redux-firebase
+const rrfConfig = {
+  userProfile: "users",
+    useFirestoreForProfile: true,
+};
+
+const initialState = {};
+let store = createStore(rootReducer, initialState, compose(applyMiddleware(thunk), window.devToolsExtension ? window.devToolsExtension() : f => f));
+console.log(`Created store ${store}`);
+
+const rrfProps = {
+    firebase,
+    config: rrfConfig,
+    dispatch: store.dispatch,
+    createFirestoreInstance,
+};
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+      <Provider store={store}>
+          <ReactReduxFirebaseProvider {...rrfProps}>
+              <BrowserRouter>
+                  <App />
+              </BrowserRouter>
+          </ReactReduxFirebaseProvider>
+
+      </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

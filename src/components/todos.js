@@ -1,7 +1,9 @@
 import React, {useState, useEffect} from "react";
 import firebase from "firebase";
+import {useSelector} from "react-redux";
 import TextField from "@material-ui/core/TextField/TextField";
 import Button from "@material-ui/core/Button"
+import Typography from "@material-ui/core/Typography"
 import {DATABASE} from "../firebase_config";
 import TodoListItem from "./todo.js";
 
@@ -9,13 +11,19 @@ export default function TodoInterface()
 {
     const [todosList, setTodos] = useState([]);
     const [todoInput, setTodoInput] = useState('');
+    const { uid } = useSelector((state) => state.firebase.auth);
+    const {displayName} = useSelector((state) => state.firebase.auth);
 
     useEffect(() => {
         getTodos()
     }, []); //blank to run only first time page is loaded, add field to run on change
 
     function getTodos() { //on snapshot returns a live state of the collection instead of get is static
-        DATABASE.collection("todos").onSnapshot(function (querySnapshot) {
+        DATABASE
+            .collection("users")
+            .doc(uid)
+            .collection("todos")
+            .onSnapshot(function (querySnapshot) {
             setTodos(
                 querySnapshot.docs.map((doc) => ({
                     id: doc.id,
@@ -31,12 +39,21 @@ export default function TodoInterface()
 
     function addTodo(e) {
         e.preventDefault();
-        DATABASE.collection("todos").add({
+        DATABASE
+            .collection("users")
+            .doc(uid)
+            .collection("todos")
+            .add({
             colour: 0,
             created: firebase.firestore.FieldValue.serverTimestamp(),
             due: firebase.firestore.FieldValue.serverTimestamp(),
             name: todoInput,
             status: true
+        })
+            .then((docRef) => {
+            docRef.update({
+                todoID: docRef.id,
+            });
         });
 
         setTodoInput("");
@@ -44,6 +61,9 @@ export default function TodoInterface()
 
     return (
         <div style={{minWidth: "384px"}}>
+            <Typography>
+                {displayName}
+            </Typography>
             <form noValidate autoComplete="off">
                 <TextField
                     id="standard-basic"
@@ -63,7 +83,7 @@ export default function TodoInterface()
             </form>
 
             {todosList.map((todo) => (
-                <TodoListItem name={todo.name} status={todo.status} id={todo.id} />
+                <TodoListItem name={todo.name} status={todo.status} id={todo.id} key={todo.id} />
             ))}
         </div>
     )
