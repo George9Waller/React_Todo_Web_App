@@ -8,6 +8,7 @@ import Heading from './components/heading';
 import TodoInterface from './components/todos';
 import PrivateRoute from './components/privateRoute';
 import SignIn from './components/signIn';
+import SignOut from './components/signOut';
 import './App.css';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
                     <Switch>
                         <PrivateRoute path = "/todos">
                             <TodoInterface />
+                            <SignOut />
                         </PrivateRoute>
                         <Route path = "/">
                             <SignIn/>

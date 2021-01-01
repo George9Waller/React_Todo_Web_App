@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {BrowserRouter} from "react-router-dom";
+import {BrowserRouter} from 'react-router-dom';
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-import {createStore, applyMiddleware, compose} from "redux";
-import thunk from "redux-thunk";
+import {PersistGate} from "redux-persist/lib/integration/react";
 import {Provider} from "react-redux";
 import {ReactReduxFirebaseProvider} from "react-redux-firebase";
 import {createFirestoreInstance} from "redux-firestore";
-import {rootReducer} from "./redux/reducers";
+import createStore from './createStore'
 import './index.css';
+import Heading from './components/heading'
 import App from './App';
 
 // react-redux-firebase
@@ -20,8 +20,7 @@ const rrfConfig = {
 };
 
 const initialState = {};
-let store = createStore(rootReducer, initialState, compose(applyMiddleware(thunk), window.devToolsExtension ? window.devToolsExtension() : f => f));
-console.log(`Created store ${store}`);
+const {store, persistor} = createStore(initialState);
 
 const rrfProps = {
     firebase,
@@ -34,11 +33,12 @@ ReactDOM.render(
   <React.StrictMode>
       <Provider store={store}>
           <ReactReduxFirebaseProvider {...rrfProps}>
-              <BrowserRouter>
-                  <App />
-              </BrowserRouter>
+              <PersistGate persistor={persistor} loading={<Heading />}>
+                  <BrowserRouter>
+                      <App />
+                  </BrowserRouter>
+              </PersistGate>
           </ReactReduxFirebaseProvider>
-
       </Provider>
   </React.StrictMode>,
   document.getElementById('root')

@@ -15,7 +15,7 @@ export default function TodoInterface()
     const {displayName} = useSelector((state) => state.firebase.auth);
 
     useEffect(() => {
-        getTodos()
+        getTodos();
     }, []); //blank to run only first time page is loaded, add field to run on change
 
     function getTodos() { //on snapshot returns a live state of the collection instead of get is static
@@ -23,6 +23,7 @@ export default function TodoInterface()
             .collection("users")
             .doc(uid)
             .collection("todos")
+            .orderBy('due')
             .onSnapshot(function (querySnapshot) {
             setTodos(
                 querySnapshot.docs.map((doc) => ({
@@ -39,6 +40,8 @@ export default function TodoInterface()
 
     function addTodo(e) {
         e.preventDefault();
+        let due = new Date("2020-1-1");
+        // due.setDate(due.getDate() + 2);
         DATABASE
             .collection("users")
             .doc(uid)
@@ -46,7 +49,7 @@ export default function TodoInterface()
             .add({
             colour: 0,
             created: firebase.firestore.FieldValue.serverTimestamp(),
-            due: firebase.firestore.FieldValue.serverTimestamp(),
+            due: due.toISOString(),
             name: todoInput,
             status: true
         })
@@ -71,6 +74,7 @@ export default function TodoInterface()
                     label="Todo"
                     value={todoInput}
                     onChange={(e) => setTodoInput(e.target.value)}
+                    style={{marginBottom: "2vh"}}
                 />
                 <Button
                     type="submit"
@@ -83,7 +87,7 @@ export default function TodoInterface()
             </form>
 
             {todosList.map((todo) => (
-                <TodoListItem name={todo.name} status={todo.status} id={todo.id} key={todo.id} />
+                <TodoListItem name={todo.name} status={todo.status} due={todo.due} colour={todo.colour} done={false} id={todo.id} key={todo.id} />
             ))}
         </div>
     )
