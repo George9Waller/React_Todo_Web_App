@@ -49,7 +49,7 @@ export default function TodoInterface()
             .add({
             colour: 0,
             created: firebase.firestore.FieldValue.serverTimestamp(),
-            due: due.toISOString(),
+            due: firebase.firestore.FieldValue.serverTimestamp(),
             name: todoInput,
             status: true
         })
