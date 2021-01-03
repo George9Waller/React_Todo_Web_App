@@ -40,7 +40,7 @@ export default function TodoInterface()
 
     function addTodo(e) {
         e.preventDefault();
-        let due = new Date("2020-1-1");
+        // let due = new Date("2020-1-1");
         // due.setDate(due.getDate() + 2);
         DATABASE
             .collection("users")

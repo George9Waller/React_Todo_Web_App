@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import {useSelector} from "react-redux";
 import DateFnsUtils from '@date-io/date-fns';
-import {ListItem, ListItemText, Button, TextField, Typography, Radio} from "@material-ui/core";
+import {ListItem, ListItemText, Button, Radio} from "@material-ui/core";
 import {DatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import {DATABASE} from "../firebase_config";
 
@@ -15,8 +15,19 @@ export default function TodoListItem({name, status, due, colour, id}) {
     catch {
         initialDueDate = due
     }
+
     const [dueDate, setDueDate] = useState(initialDueDate);
     const [selectedColour, setSelectedColour] = useState(colour);
+
+    let initialOverdue;
+    const today = new Date();
+    initialOverdue = today >= dueDate;
+    const [overdue, setOverdue] = useState(initialOverdue);
+    console.log(today >= dueDate);
+
+    useEffect(() => {
+        setOverdue(+today >= +dueDate);
+    }, [today, dueDate]);
 
     function setStyle(num) {
         let style;
@@ -81,7 +92,7 @@ export default function TodoListItem({name, status, due, colour, id}) {
         <div style={{display: "flex"}}>
             <ListItem>
                 <ListItemText
-                    primary={name}
+                    primary={overdue ? "⚠ " + name : "" + name}
                     secondary={status ? "In progress" : "Done"}
                     primaryTypographyProps={{style: {textDecoration: status ? "" : "line-through"}, color: setStyle(selectedColour)}}
                 />
