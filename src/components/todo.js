@@ -26,7 +26,11 @@ export default function TodoListItem({name, status, due, colour, id}) {
     console.log(today >= dueDate);
 
     useEffect(() => {
-        setOverdue(+today >= +dueDate);
+        const currentDate = new Date(today);
+        const currentDueDate = new Date(dueDate);
+        currentDate.setHours(0,0,0,0);
+        currentDueDate.setHours(0,0,0,0);
+        setOverdue(currentDate >= currentDueDate);
     }, [today, dueDate]);
 
     function setStyle(num) {
