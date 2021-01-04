@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import NativeListener from 'react-native-listener';
 import firebase from "firebase";
 import {useSelector} from "react-redux";
 import TextField from "@material-ui/core/TextField/TextField";
@@ -77,14 +78,16 @@ export default function TodoInterface()
                     onChange={(e) => setTodoInput(e.target.value)}
                     style={{marginBottom: "2vh"}}
                 />
-                <Button
-                    type="submit"
-                    variant="contained"
-                    style={{display: "none"}}
-                    onClick={addTodo}
-                >
-                    Default
-                </Button>
+                <NativeListener>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        style={{display: "none"}}
+                        onClick={addTodo}
+                        >
+                        Default
+                    </Button>
+                </NativeListener>
             </form>
 
             {todosList.map((todo) => (
