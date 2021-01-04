@@ -78,7 +78,7 @@ export default function TodoInterface()
                     onChange={(e) => setTodoInput(e.target.value)}
                     style={{marginBottom: "2vh"}}
                 />
-                <NativeListener>
+                <NativeListener stopKeyDown>
                     <Button
                         type="submit"
                         variant="contained"
