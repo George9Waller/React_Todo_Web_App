@@ -39,9 +39,22 @@ export default function TodoInterface()
         });
     }
 
-    function addTodo(e) {
-        e.preventDefault();
-        e.stopPropagation();
+    const handleAddTodoBtn = () => {
+        addTodo();
+    };
+
+    const handleAddTodoKey = e => {
+        console.log(`registered key code ${e.which}`);
+        if (e.which === 13)
+        {
+            addTodo();
+        }
+    };
+
+    function addTodo() {
+        console.log(`called add todo function`)
+        // e.preventDefault();
+        // e.stopPropagation();
         // let due = new Date("2020-1-1");
         // due.setDate(due.getDate() + 2);
         DATABASE
@@ -69,27 +82,26 @@ export default function TodoInterface()
             <Typography>
                 {displayName}
             </Typography>
-            <form noValidate autoComplete="off">
+            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
                 <TextField
                     id="standard-basic"
                     fullWidth
-                    label="Todo"
+                    label="Todo..."
                     value={todoInput}
                     onChange={(e) => setTodoInput(e.target.value)}
+                    onKeyPress={handleAddTodoKey}
                     style={{marginBottom: "2vh"}}
                 />
-                <NativeListener stopKeyDown>
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        style={{display: "none"}}
-                        onClick={addTodo}
-                        >
-                        Default
-                    </Button>
-                </NativeListener>
-            </form>
-
+                <Button
+                    type="button"
+                    variant="outlined" 
+                    color="primary"
+                    onClick={handleAddTodoBtn}
+                    style={{marginLeft: "2vw"}}
+                >
+                    Add
+                </Button>
+            </div>
             {todosList.map((todo) => (
                 <TodoListItem name={todo.name} status={todo.status} due={todo.due} colour={todo.colour} done={false} id={todo.id} key={todo.id} />
             ))}
