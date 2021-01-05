@@ -85,6 +85,7 @@ export default function TodoInterface()
             <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
                 <TextField
                     id="standard-basic"
+                    autoComplete="off"
                     fullWidth
                     label="Todo..."
                     value={todoInput}
