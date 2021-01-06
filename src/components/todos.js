@@ -13,7 +13,6 @@ export default function TodoInterface()
     const [todosList, setTodos] = useState([]);
     const [todoInput, setTodoInput] = useState('');
     const { uid } = useSelector((state) => state.firebase.auth);
-    const {displayName} = useSelector((state) => state.firebase.auth);
 
     useEffect(() => {
         getTodos();
@@ -44,7 +43,6 @@ export default function TodoInterface()
     };
 
     const handleAddTodoKey = e => {
-        console.log(`registered key code ${e.which}`);
         if (e.which === 13)
         {
             addTodo();
@@ -52,11 +50,6 @@ export default function TodoInterface()
     };
 
     function addTodo() {
-        console.log(`called add todo function`)
-        // e.preventDefault();
-        // e.stopPropagation();
-        // let due = new Date("2020-1-1");
-        // due.setDate(due.getDate() + 2);
         DATABASE
             .collection("users")
             .doc(uid)
@@ -79,9 +72,9 @@ export default function TodoInterface()
 
     return (
         <div style={{minWidth: "384px"}}>
-            <Typography>
-                {displayName}
-            </Typography>
+            {/*<Typography>*/}
+            {/*    {displayName}*/}
+            {/*</Typography>*/}
             <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
                 <TextField
                     id="standard-basic"

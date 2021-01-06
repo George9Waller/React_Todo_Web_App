@@ -23,7 +23,6 @@ export default function TodoListItem({name, status, due, colour, id}) {
     const today = new Date();
     initialOverdue = today >= dueDate;
     const [overdue, setOverdue] = useState(initialOverdue);
-    console.log(today >= dueDate);
 
     useEffect(() => {
         const currentDate = new Date(today);
