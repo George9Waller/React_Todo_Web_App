@@ -81,9 +81,9 @@ export const AccountListItem = ({nameProp, usernameProp, emailProp, passwordHash
     }
 
     const generateKeywords = (name, username, email) => {
-        const nameKeywords = createKeywords(name);
-        const usernameKeywords = createKeywords(username);
-        const emailKeywords = createKeywords(email);
+        const nameKeywords = createKeywords(name.toLowerCase());
+        const usernameKeywords = createKeywords(username.toLowerCase());
+        const emailKeywords = createKeywords(email.toLowerCase());
         return [
             ...new Set([
                 ...nameKeywords,

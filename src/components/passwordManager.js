@@ -6,11 +6,9 @@ import TextField from "@material-ui/core/TextField/TextField";
 import Button from "@material-ui/core/Button"
 import Typography from "@material-ui/core/Typography"
 import List from '@material-ui/core/List';
-import ListSubheader from '@material-ui/core/ListSubheader';
 import Divider from '@material-ui/core/Divider';
 import {DATABASE} from "../firebase_config";
 import {AccountListItem} from "./accountListItem.js"
-import {grey} from "@material-ui/core/colors";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -31,10 +29,11 @@ export const PasswordManager = () => {
     const { uid } = useSelector((state) => state.firebase.auth);
     const classes = useStyles();
 
-
     useEffect(() => {
-        getAccounts();
-    }, []); //blank to run only first time page is loaded, add field to run on change
+        if (search === '') {
+            handleSearch();
+        }
+    }, [search])
 
 
     function getAccounts() { //on snapshot returns a live state of the collection instead of get is static
@@ -76,8 +75,7 @@ export const PasswordManager = () => {
             });
     }
 
-    const handleSearch = (search) => {
-        setSearch(search)
+    const handleSearch = () => {
         if (search.length === 0)
         {
             return getAccounts();
@@ -104,18 +102,42 @@ export const PasswordManager = () => {
             });
     }
 
+    const handleReset = () => {
+        setSearch('');
+    }
+
     return (
         <div style={{minWidth: "384px"}}>
             <Divider variant="middle" style={{marginTop: '2vh'}} />
-            <TextField
-                id="standard-basic"
-                autoComplete="off"
-                fullWidth
-                label="Search..."
-                value={search}
-                onChange={(e) => handleSearch(e.target.value)}
-                style={{marginBottom: "2vh"}}
-            />
+            <div style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
+                <TextField
+                    id="standard-basic"
+                    autoComplete="off"
+                    fullWidth
+                    label="Search..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value.toLowerCase())}
+                    style={{marginBottom: "2vh"}}
+                />
+                <Button
+                    type="button"
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleSearch}
+                    style={{marginLeft: "2vw"}}
+                >
+                    Search
+                </Button>
+                <Button
+                    type="button"
+                    variant="outlined"
+                    color="default"
+                    onClick={handleReset}
+                    style={{marginLeft: "2vw"}}
+                >
+                    Reset
+                </Button>
+            </div>
             <Button
                 type="button"
                 onClick={addAccount}
@@ -139,6 +161,7 @@ export const PasswordManager = () => {
                     </>
                 ))}
             </List>
+            <Typography variant="caption">20 most recent accounts show, search to get more specific results.</Typography>
         </div>
     );
 

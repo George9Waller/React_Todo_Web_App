@@ -37,6 +37,7 @@
     "redux-storage": "^4.1.2",
     "redux-storage-engine-localstorage": "^1.1.4",
     "redux-thunk": "^2.3.0",
+    "weather-icons": "github:erikflowers/weather-icons",
     "web-vitals": "^0.2.4",
     "yarn": "^1.22.10"
   },

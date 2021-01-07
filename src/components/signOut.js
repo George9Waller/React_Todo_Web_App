@@ -19,6 +19,7 @@ const SignOut = () => {
         <div>
             <br/>
             <Button
+                variant="contained"
                 onClick={(event) => {
                     event.preventDefault();
                     SignOut();

@@ -4,6 +4,7 @@ import {DATABASE} from "./firebase_config";
 import {Switch, Route, BrowserRouter} from "react-router-dom";
 import {Tabs, TabLink, TabContent} from 'react-tabs-redux';
 import 'react-tabs/style/react-tabs.css';
+import 'weather-icons/css/weather-icons.css'
 import { ThemeProvider, IconButton } from '@material-ui/core';
 import { createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline"
@@ -19,6 +20,7 @@ import SignOut from './components/signOut';
 import './App.css';
 import {useSelector} from "react-redux";
 import {PasswordManager} from "./components/passwordManager";
+import Weather from "./components/weather";
 
 export const dark ={
     palette: {
@@ -49,7 +51,7 @@ function App() {
     const { uid } = useSelector((state) => state.firebase.auth);
     const [activeTab, setActiveTab] = useState('todo');
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         DATABASE.collection('users').doc(uid).get().then(function(doc) {
             if (doc.data().activeTab) {
                 setActiveTab(doc.data().activeTab);
@@ -60,8 +62,17 @@ function App() {
                 });
                 setActiveTab('todo');
             }
+            if (doc.data().theme) {
+                setTheme(doc.data().theme);
+            }
+            else {
+                DATABASE.collection('users').doc(uid).update({
+                    theme: false
+                });
+                setTheme(false);
+            }
         });
-    }, []);
+    }, [uid]);
 
     return (
         <ThemeProvider theme={appliedTheme}>
@@ -81,11 +92,20 @@ function App() {
                                                 });
                                     }}
                                     selectedTab={activeTab}
-                                    renderActiveTabContentOnly={true}
+                                    //renderActiveTabContentOnly={true}
                                     activeLinkStyle={{borderBottom: 'solid 2px', borderBottomColor: 'Primary', borderRadius: '0px'}}
                                 >
                                     <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
                                         <div style={{marginRight: "1vw"}}>
+                                            <TabLink
+                                                to="weather"
+                                                component={Button}
+                                            >
+                                                Weather
+                                            </TabLink>
+                                        </div>
+                                        <Divider orientation="vertical" flexItem />
+                                        <div style={{marginRight: "1vw", marginLeft: "1vw"}}>
                                             <TabLink
                                                 to="todo"
                                                 component={Button}
@@ -103,6 +123,9 @@ function App() {
                                             </TabLink>
                                         </div>
                                     </div>
+                                    <TabContent for="weather">
+                                        <Weather />
+                                    </TabContent>
                                     <TabContent for="todo">
                                         <TodoInterface />
                                     </TabContent>
@@ -124,7 +147,14 @@ function App() {
                         edge="end"
                         color="inherit"
                         aria-label="mode"
-                        onClick={() => setTheme(!theme)}
+                        onClick={() => {
+                            if (uid) {
+                                DATABASE.collection('users').doc(uid).update({
+                                    theme: !theme
+                                });
+                            }
+                            setTheme(!theme);
+                        }}
                         href=""
                     >
                         {icon}
